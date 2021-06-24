@@ -11,7 +11,7 @@ if (!empty($search)) {
 
     $resultados = buscarResultados();
     if (!$resultados) {
-        die("404");
+        die('404');
     } else {
         enviarResultadosEnJson($resultados);
     }

@@ -18,7 +18,7 @@ function insertarTask($name, $description){
     ));
 
     if(!$resultado){
-        die('el insert fallo');
+        die('el insert falló');
     }
 
     echo 'Tarea agregada satisfactoriamente';
