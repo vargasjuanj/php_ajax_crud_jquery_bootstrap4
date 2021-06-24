@@ -11,29 +11,12 @@ $(() => {
     ocultarContenedorDeBusqueda()
 
     // console.log('Jquery funcionando')
-    search();
+  
+// Si se coloca dentro de una función solo se ejecutaria una vez, debe estar en la raiz
 
-    $('#form').submit((e) => {
-        e.preventDefault()
-        console.log('no es necesario buscar con el boton, es buscador en tiempo real')
-    })
-
-    enviarDatosDeFormularioDeTask()
-
-})
-
-const ocultarContenedorDeBusqueda = () => {
-    $('#tasks-results').hide()
-}
-
-const mostrarCampoDeBusqueda8 = () => {
-    $('#tasks-results').show()
-
-}
-
-const search = () => {
 
     $('#search').keyup(() => {
+        mostrarContenedorDeBusqueda()
         //Si no se coloca esta validacion, trae todos las tareas cuando está vacio, solo si se buscó antes
         if ($('#search').val()) {
 
@@ -43,7 +26,34 @@ const search = () => {
             ocultarContenedorDeBusqueda()
         }
     })
+
+
+    $('#form').submit((e) => {
+        e.preventDefault()
+        console.log('no es necesario buscar con el boton, es buscador en tiempo real')
+    })
+
+    $('#task-form').submit((e) => {
+        e.preventDefault()
+
+        const task = cargarTask()
+
+
+        enviarPeticion(task, 'backend/task-add.php')
+
+    })
+})
+
+const ocultarContenedorDeBusqueda = () => {
+    $('#tasks-results').hide()
 }
+
+const mostrarContenedorDeBusqueda = () => {
+    $('#tasks-results').show()
+
+}
+
+
 
 const hacerPeticion = () => {
     let search = $('#search').val()
@@ -103,15 +113,21 @@ const mostrarElementosTasks = jsontasks => {
 }
 
 
-const enviarDatosDeFormularioDeTask = () => {
-    $('#task-form').submit((e) => {
-        const task = {
-            name: $('#name').val(),
-            description: $('#description').val()
-        }
 
-        console.log(task)
-        e.preventDefault()
+const cargarTask = () => {
+    const task = {
+        name: $('#name').val(),
+        description: $('#description').val()
+    }
+    return task
+}
+// Se hace uso de otra funcionaldiad distinta de jquery para enviar info
+const enviarPeticion = (data, url) => {
+    // Le indico a dondde quiero enviarlo, los datos y luego que hago cuando recibo una respuesta
+    $.post(url, data, response => {
+        console.log(response)
+
+        // resetea el formulario
+        $('#task-form').trigger('reset')
     })
-
 }

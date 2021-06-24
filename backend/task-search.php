@@ -1,6 +1,6 @@
 <?php
 
-require_once 'database.php';
+require_once 'conexion.php';
 
 $search = $_POST['search'];
 
