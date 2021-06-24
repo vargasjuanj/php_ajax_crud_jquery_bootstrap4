@@ -8,6 +8,7 @@
 // Esta funciónd e jquery es para saber si el documento ya está listo
 $(() => {
 
+    ocultarContenedorDeBusqueda()
 
     // console.log('Jquery funcionando')
     search();
@@ -17,10 +18,18 @@ $(() => {
         console.log('no es necesario buscar con el boton, es buscador en tiempo real')
     })
 
-
+    enviarDatosDeFormularioDeTask()
 
 })
 
+const ocultarContenedorDeBusqueda = () => {
+    $('#tasks-results').hide()
+}
+
+const mostrarCampoDeBusqueda8 = () => {
+    $('#tasks-results').show()
+
+}
 
 const search = () => {
 
@@ -30,7 +39,8 @@ const search = () => {
 
             hacerPeticion()
         } else {
-            vaciarCompoDeBusqueda()
+            vaciarcampoDeBusqueda()
+            ocultarContenedorDeBusqueda()
         }
     })
 }
@@ -59,7 +69,8 @@ const hacerPeticion = () => {
     })
 }
 
-const vaciarCompoDeBusqueda = () => {
+const vaciarcampoDeBusqueda = () => {
+
     $('#tasks-data').html('')
 }
 const transformarTareasEnArrayDeObjetos = response => {
@@ -76,7 +87,6 @@ const transformarTareasEnArrayDeObjetos = response => {
 }
 
 const mostrarElementosTasks = jsontasks => {
-
     // Lo convierto en array para poder usar los metodos de array. Crea un array de una lista de objetos 
     let tasks = Array.from(jsontasks)
 
@@ -89,4 +99,19 @@ const mostrarElementosTasks = jsontasks => {
     })
 
     $('#tasks-data').html(template)
+
+}
+
+
+const enviarDatosDeFormularioDeTask = () => {
+    $('#task-form').submit((e) => {
+        const task = {
+            name: $('#name').val(),
+            description: $('#description').val()
+        }
+
+        console.log(task)
+        e.preventDefault()
+    })
+
 }
