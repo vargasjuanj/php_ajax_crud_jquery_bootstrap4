@@ -1,4 +1,4 @@
-import nose  from "./algo.js"
+import nose from "./algo.js"
 
 // ((param1, param2) => {
 //     console.log(param1, param2);
@@ -8,12 +8,12 @@ import nose  from "./algo.js"
 
 // Esta funciónd e jquery es para saber si el documento ya está listo
 $(() => {
-nose()
+    nose()
     ocultarContenedorDeBusqueda()
 
     // console.log('Jquery funcionando')
-  
-// Si se coloca dentro de una función solo se ejecutaria una vez, debe estar en la raiz
+
+    // Si se coloca dentro de una función solo se ejecutaria una vez, debe estar en la raiz
 
 
     $('#search').keyup(() => {
@@ -43,8 +43,38 @@ nose()
         enviarPeticionConPost(task, 'backend/task-add.php')
 
     })
-// En este caso esta petición ajax se va a ejecutar apenas la aplicación inicia, ya sea q la ponga en un metodo aparte o la divida en una función, porque no está escuchando un evento
-obtenerTasks()
+    // En este caso esta petición ajax se va a ejecutar apenas la aplicación inicia, ya sea q la ponga en un metodo aparte o la divida en una función, porque no está escuchando un evento
+    obtenerTasks()
+
+    // En el documento va escuchar los eventos click de la clase task-delete y ejecutar cierta funcion
+    $(document).on('click', '.task-delete', function () { // con la funcion flecha no funca
+
+        if (confirm('Are you sure you want to delte it?')) {
+            // Lo que hace $(this) es obtener la referencia al boton que sido clickeado
+            // Es un arreglo, el elemento cero es el que ha sido cliqueado, muestra el elemento html
+            // let botonDelete = $(this)[0].parentElement.parentElement
+            let botonDelete = $(this)[0]
+            // buscamos  el atributo creado taskId y extraemos su valor que es task.id, directamente se lo puse al boton eliminar en vez de al tr y tambien editar asi no navegamos hacia el abuelo
+            let id = $(botonDelete).attr('taskId')
+            console.log('id')
+            $.post('backend/task-delete.php', { id }, () => {
+                obtenerTasks()
+
+            })
+        }
+
+    })
+
+
+
+
+
+
+
+
+
+
+
 
 })
 
@@ -136,30 +166,35 @@ const enviarPeticionConPost = (data, url) => {
     })
 }
 
-const obtenerTasks = ()=>{
-   $.ajax({
-    url: 'backend/task-list.php',
-    type: 'GET',
-    success: (response)=>{
-       let tasksjson = transformarTareasEnArrayDeObjetos(response)
+const obtenerTasks = () => {
+    $.ajax({
+        url: 'backend/task-list.php',
+        type: 'GET',
+        success: (response) => {
+            let tasksjson = transformarTareasEnArrayDeObjetos(response)
 
-       mostrarListadoDeTasks(tasksjson)
-      
-       
-       
-    }
-   })
+            mostrarListadoDeTasks(tasksjson)
+
+
+
+        }
+    })
 }
-const mostrarListadoDeTasks= (tasksjson)=>{
-    let tasks =Array.from(tasksjson)
+const mostrarListadoDeTasks = (tasksjson) => {
+    let tasks = Array.from(tasksjson)
 
     let template = ''
 
-    tasks.forEach(task =>{
+    tasks.forEach(task => {
         template += `<tr>
         <td>${task.id}</td>
         <td>${task.name}</td>
         <td>${task.description}</td>
+        <td>
+        
+            <button taskId=${task.id} class="btn btn-danger task-delete">Delete</button>
+
+        </td>
         </tr>`
     })
 
